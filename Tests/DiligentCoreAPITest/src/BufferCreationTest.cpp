@@ -45,6 +45,10 @@
 #    include "Metal/CreateObjFromNativeResMtl.hpp"
 #endif
 
+#if WEBGPU_SUPPORTED
+#    include "WebGPU/CreateObjFromNativeResWebGPU.hpp"
+#endif
+
 #include "GraphicsAccessories.hpp"
 
 #include "GPUTestingEnvironment.hpp"
@@ -105,6 +109,12 @@ protected:
                 pCreateObjFromNativeRes.reset(new TestCreateObjFromNativeResMtl(pDevice));
                 break;
 #endif
+#if WEBGPU_SUPPORTED
+            case RENDER_DEVICE_TYPE_WEBGPU:
+                pCreateObjFromNativeRes.reset(new TestCreateObjFromNativeResWebGPU(pDevice));
+                break;
+#endif
+
             default: UNEXPECTED("Unexpected device type");
         }
     }

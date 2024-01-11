@@ -61,6 +61,10 @@ void ClearRenderTargetReferenceVk(ISwapChain* pSwapChain, const float ClearColor
 void ClearRenderTargetReferenceMtl(ISwapChain* pSwapChain, const float ClearColor[]);
 #endif
 
+#if WEBGPU_SUPPORTED
+void ClearRenderTargetReferenceWebGPU(ISwapChain* pSwapChain, const float ClearColor[]);
+#endif
+
 } // namespace Testing
 
 } // namespace Diligent
@@ -107,6 +111,12 @@ void ClearRenderTargetReference(IRenderDevice* pDevice,
 #if METAL_SUPPORTED
         case RENDER_DEVICE_TYPE_METAL:
             ClearRenderTargetReferenceMtl(pSwapChain, ClearColor);
+            break;
+#endif
+
+#if WEBGPU_SUPPORTED
+        case RENDER_DEVICE_TYPE_WEBGPU:
+            ClearRenderTargetReferenceWebGPU(pSwapChain, ClearColor);
             break;
 #endif
 

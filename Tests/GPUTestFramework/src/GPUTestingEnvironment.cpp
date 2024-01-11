@@ -57,6 +57,10 @@
 #    include "EngineFactoryMtl.h"
 #endif
 
+#if WEBGPU_SUPPORTED
+#    include "EngineFactoryWebGPU.h"
+#endif
+
 #if ARCHIVER_SUPPORTED
 #    include "ArchiverFactoryLoader.h"
 #endif
@@ -86,6 +90,10 @@ GPUTestingEnvironment* CreateTestingEnvironmentVk(const GPUTestingEnvironment::C
 
 #if METAL_SUPPORTED
 GPUTestingEnvironment* CreateTestingEnvironmentMtl(const GPUTestingEnvironment::CreateInfo& CI, const SwapChainDesc& SCDesc);
+#endif
+
+#if WEBGPU_SUPPORTED
+GPUTestingEnvironment* CreateTestingEnvironmentWebGPU(const GPUTestingEnvironment::CreateInfo& CI, const SwapChainDesc& SCDesc);
 #endif
 
 Uint32 GPUTestingEnvironment::FindAdapter(const std::vector<GraphicsAdapterInfo>& Adapters,
@@ -451,7 +459,25 @@ GPUTestingEnvironment::GPUTestingEnvironment(const CreateInfo& EnvCI, const Swap
         }
         break;
 #endif
-
+#if WEBGPU_SUPPORTED
+        case RENDER_DEVICE_TYPE_WEBGPU:
+        {
+#    if ENGINE_DLL
+            auto GetEngineFactoryWebGPU = LoadGraphicsEngineWebGPU();
+            if (GetEngineFactoryWebGPU == nullptr)
+            {
+                LOG_ERROR_AND_THROW("Failed to load the engine");
+            }
+#    endif
+            auto* pFactoryWGPU = GetEngineFactoryWebGPU();
+            pFactoryWGPU->SetMessageCallback(MessageCallback);
+            EngineWebGPUCreateInfo EngineCI{};
+            EngineCI.Features = EnvCI.Features;
+            ppContexts.resize(std::max(size_t{1}, ContextCI.size()) + NumDeferredCtx);
+            pFactoryWGPU->CreateDeviceAndContextsWebGPU(EngineCI, &m_pDevice, ppContexts.data());
+        }
+#endif
+        break;
         default:
             LOG_ERROR_AND_THROW("Unknown device type");
             break;
@@ -892,6 +918,10 @@ GPUTestingEnvironment* GPUTestingEnvironment::Initialize(int argc, char** argv)
         {
             TestEnvCI.deviceType = RENDER_DEVICE_TYPE_METAL;
         }
+        else if (strcmp(arg, "--mode=webgpu") == 0)
+        {
+            TestEnvCI.deviceType = RENDER_DEVICE_TYPE_WEBGPU;
+        }
         else if (AdapterArgName.compare(0, AdapterArgName.length(), arg, AdapterArgName.length()) == 0)
         {
             const auto* AdapterStr = arg + AdapterArgName.length();
@@ -963,6 +993,12 @@ GPUTestingEnvironment* GPUTestingEnvironment::Initialize(int argc, char** argv)
 #if VULKAN_SUPPORTED
             case RENDER_DEVICE_TYPE_VULKAN:
                 pEnv = CreateTestingEnvironmentVk(TestEnvCI, SCDesc);
+                break;
+#endif
+
+#if WEBGPU_SUPPORTED
+            case RENDER_DEVICE_TYPE_WEBGPU:
+                pEnv = CreateTestingEnvironmentWebGPU(TestEnvCI, SCDesc);
                 break;
 #endif
 

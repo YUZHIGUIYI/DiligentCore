@@ -58,6 +58,11 @@ void ComputeShaderReferenceVk(ISwapChain* pSwapChain);
 void ComputeShaderReferenceMtl(ISwapChain* pSwapChain);
 #endif
 
+#if WEBGPU_SUPPORTED
+void ComputeShaderReferenceWebGPU(ISwapChain* pSwapChain);
+#endif
+
+
 void ComputeShaderReference(ISwapChain* pSwapChain)
 {
     auto* pEnv    = GPUTestingEnvironment::GetInstance();
@@ -98,6 +103,11 @@ void ComputeShaderReference(ISwapChain* pSwapChain)
             break;
 #endif
 
+#if WEBGPU_SUPPORTED
+        case RENDER_DEVICE_TYPE_WEBGPU:
+            ComputeShaderReferenceWebGPU(pSwapChain);
+            break;
+#endif
         default:
             LOG_ERROR_AND_THROW("Unsupported device type");
     }

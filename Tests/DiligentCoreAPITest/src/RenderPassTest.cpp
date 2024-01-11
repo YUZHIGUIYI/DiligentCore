@@ -65,6 +65,11 @@ void RenderPassMSResolveReferenceMtl(ISwapChain* pSwapChain, const float* pClear
 void RenderPassInputAttachmentReferenceMtl(ISwapChain* pSwapChain, const float* pClearColor, bool UseFramebufferFetch);
 #endif
 
+#if WEBGPU_SUPPORTED
+void RenderPassMSResolveReferenceWebGPU(ISwapChain* pSwapChain, const float* pClearColor);
+void RenderPassInputAttachmentReferenceWebGPU(ISwapChain* pSwapChain, const float* pClearColor);
+#endif
+
 void RenderDrawCommandReference(ISwapChain* pSwapChain, const float* pClearColor);
 
 } // namespace Testing
@@ -764,6 +769,11 @@ void RenderPassTest::TestInputAttachment(bool UseSignature, bool UseMemoryless)
                 break;
 #endif
 
+#if WEBGPU_SUPPORTED
+            case RENDER_DEVICE_TYPE_WEBGPU:
+                RenderPassInputAttachmentReferenceWebGPU(pSwapChain, ClearColor);
+                break;
+#endif
             default:
                 LOG_ERROR_AND_THROW("Unsupported device type");
         }

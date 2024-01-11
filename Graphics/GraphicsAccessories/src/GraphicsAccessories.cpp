@@ -1311,7 +1311,7 @@ const char* GetDeviceFeatureStateString(DEVICE_FEATURE_STATE State, bool bGetFul
 
 const char* GetRenderDeviceTypeString(RENDER_DEVICE_TYPE DeviceType, bool bGetEnumString)
 {
-    static_assert(RENDER_DEVICE_TYPE_COUNT == 7, "Did you add a new device type? Please update the switch below.");
+    static_assert(RENDER_DEVICE_TYPE_COUNT == 8, "Did you add a new device type? Please update the switch below.");
     switch (DeviceType)
     {
         // clang-format off
@@ -1322,6 +1322,7 @@ const char* GetRenderDeviceTypeString(RENDER_DEVICE_TYPE DeviceType, bool bGetEn
         case RENDER_DEVICE_TYPE_GLES:      return bGetEnumString ? "RENDER_DEVICE_TYPE_GLES"      : "OpenGLES";   break;
         case RENDER_DEVICE_TYPE_VULKAN:    return bGetEnumString ? "RENDER_DEVICE_TYPE_VULKAN"    : "Vulkan";     break;
         case RENDER_DEVICE_TYPE_METAL:     return bGetEnumString ? "RENDER_DEVICE_TYPE_METAL"     : "Metal";      break;
+        case RENDER_DEVICE_TYPE_WEBGPU:    return bGetEnumString ? "RENDER_DEVICe_TYPE_WEBGPU"    : "WebGPU";     break;
         // clang-format on
         default: UNEXPECTED("Unknown/unsupported device type"); return "UNKNOWN";
     }
@@ -1329,7 +1330,7 @@ const char* GetRenderDeviceTypeString(RENDER_DEVICE_TYPE DeviceType, bool bGetEn
 
 const char* GetRenderDeviceTypeShortString(RENDER_DEVICE_TYPE DeviceType, bool Capital)
 {
-    static_assert(RENDER_DEVICE_TYPE_COUNT == 7, "Did you add a new device type? Please update the switch below.");
+    static_assert(RENDER_DEVICE_TYPE_COUNT == 8, "Did you add a new device type? Please update the switch below.");
     switch (DeviceType)
     {
         // clang-format off
@@ -1340,6 +1341,7 @@ const char* GetRenderDeviceTypeShortString(RENDER_DEVICE_TYPE DeviceType, bool C
         case RENDER_DEVICE_TYPE_GLES:      return Capital ? "GLES"      : "gles";      break;
         case RENDER_DEVICE_TYPE_VULKAN:    return Capital ? "VK"        : "vk";        break;
         case RENDER_DEVICE_TYPE_METAL:     return Capital ? "MTL"       : "mtl";       break;
+        case RENDER_DEVICE_TYPE_WEBGPU:    return Capital ? "WEBGPU"    : "webgpu";    break;
         // clang-format on
         default: UNEXPECTED("Unknown/unsupported device type"); return "UNKNOWN";
     }

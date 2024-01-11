@@ -1585,6 +1585,7 @@ enum RENDER_DEVICE_TYPE
     RENDER_DEVICE_TYPE_GLES,           ///< OpenGLES device
     RENDER_DEVICE_TYPE_VULKAN,         ///< Vulkan device
     RENDER_DEVICE_TYPE_METAL,          ///< Metal device
+    RENDER_DEVICE_TYPE_WEBGPU,         ///< WebGPU device
     RENDER_DEVICE_TYPE_COUNT           ///< The total number of device types
 };
 
@@ -4041,6 +4042,26 @@ struct EngineMtlCreateInfo DILIGENT_DERIVE(EngineCreateInfo)
 };
 typedef struct EngineMtlCreateInfo EngineMtlCreateInfo;
 
+/// Attributes of the WebGPU-based engine implementation
+struct EngineWebGPUCreateInfo DILIGENT_DERIVE(EngineCreateInfo)
+
+    /// 
+    Uint32 QueueSignalPoolSize DEFAULT_INITIALIZER(32);
+
+    ///
+    Uint32 DynamicHeapPageSize DEFAULT_INITIALIZER(4 << 20);
+
+#if DILIGENT_CPP_INTERFACE
+    EngineWebGPUCreateInfo() noexcept :
+        EngineWebGPUCreateInfo{EngineCreateInfo{}}
+    {}
+
+    explicit EngineWebGPUCreateInfo(const EngineCreateInfo &EngineCI) noexcept :
+        EngineCreateInfo{EngineCI}
+    {}
+#endif
+};
+typedef struct EngineWebGPUCreateInfo EngineWebGPUCreateInfo;
 
 /// Box
 struct Box

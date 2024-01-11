@@ -50,6 +50,10 @@
 #    include "Metal/CreateObjFromNativeResMtl.hpp"
 #endif
 
+#if WEBGPU_SUPPORTED
+#    include "WebGPU/CreateObjFromNativeResWebGPU.hpp"
+#endif
+
 #include "GPUTestingEnvironment.hpp"
 
 #include "gtest/gtest.h"
@@ -121,6 +125,12 @@ protected:
 #if METAL_SUPPORTED
             case RENDER_DEVICE_TYPE_METAL:
                 pCreateObjFromNativeRes.reset(new TestCreateObjFromNativeResMtl(pDevice));
+                break;
+#endif
+
+#if WEBGPU_SUPPORTED
+            case RENDER_DEVICE_TYPE_WEBGPU:
+                pCreateObjFromNativeRes.reset(new TestCreateObjFromNativeResWebGPU(pDevice));
                 break;
 #endif
 

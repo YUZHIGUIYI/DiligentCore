@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.6)
+cmake_minimum_required (VERSION 3.11)
 
 # cmake_minimum_required(VERSION) resets all policies to their default
 # values for the VERSION, so calling cmake_policy(SET CMP0063 NEW) has
@@ -140,6 +140,28 @@ if (VULKAN_SUPPORTED AND (PLATFORM_WIN32 OR PLATFORM_LINUX OR PLATFORM_MACOS OR 
     set(VOLK_HEADERS_ONLY ON)
     add_subdirectory(volk)
     install(FILES "${volk_SOURCE_DIR}/LICENSE.md" DESTINATION "Licenses/ThirdParty/${DILIGENT_CORE_DIR}" RENAME Volk-License.md)
+endif()
+
+if (WEBGPU_SUPPORTED)
+    include(FetchContent)
+    FetchContent_Declare(
+        webgpu
+        GIT_REPOSITORY https://github.com/eliemichel/WebGPU-distribution
+        GIT_TAG        wgpu
+    )
+
+    FetchContent_MakeAvailable(webgpu)
+
+    #
+    #get_property(ARCH_CACHE_VALUE CACHE ARCH PROPERTY VALUE)
+    #unset(ARCH CACHE)
+    #set(WEBGPU_BACKEND WGPU)
+    #add_subdirectory(webgpu)
+    #set_directory_root_folder("webgpu" "DiligentCore/ThirdParty/webgpu")
+    #set(ARCH "${ARCH_CACHE_VALUE}" CACHE INTERNAL "")
+
+    #add_subdirectory(tint EXCLUDE_FROM_ALL)
+    #set_directory_root_folder("tint" "DiligentCore/ThirdParty/tint")
 endif()
 
 if ((${DILIGENT_BUILD_GOOGLE_TEST}) AND (NOT TARGET gtest))
